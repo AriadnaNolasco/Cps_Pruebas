@@ -13,7 +13,6 @@ spring:
     url: jdbc:h2:mem:testdb;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false
     username: sa
     password: sa
-    data: classpath:data.sql
   jpa:
     database: h2
     show-sql: true
@@ -31,6 +30,9 @@ spring:
   data :
     rest :
       basePath : /api
+  sql:
+    init:
+      data-locations: classpath:data.sql
 
 logging :
   # DEBUG, INFO , ERROR

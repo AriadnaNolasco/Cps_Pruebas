@@ -16,9 +16,6 @@ spring:
     username : ${DB_USERNAME}
     password : ${DB_PASSWORD}
 
-    platform : mysql
-    initialization-mode : always
-
   jpa:
     generate-ddl : false
     hibernate.ddl-auto : none
@@ -34,6 +31,10 @@ spring:
   data :
     rest :
       basePath : /api
+  sql:
+    init:
+      mode:
+      platform: mysql
 
 logging :
   # DEBUG, INFO , ERROR
