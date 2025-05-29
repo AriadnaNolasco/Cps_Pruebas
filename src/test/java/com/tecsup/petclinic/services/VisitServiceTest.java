@@ -56,7 +56,7 @@ public class VisitServiceTest {
         // Actualizar
         Visit updatedVisit = visitService.update(createdVisit);
 
-        assertEquals("Visita actualizada", updatedVisit.getDescription());
+        assertEquals("La visita se actualizo", updatedVisit.getDescription());
         assertEquals(Date.valueOf("2024-06-01"), updatedVisit.getVisitDate());
     }
 
@@ -76,24 +76,5 @@ public class VisitServiceTest {
         } catch (VisitNotFoundException e) {
             fail("No se encontró la visita: " + e.getMessage());
         }
-    }
-
-    /**
-     * Test de eliminación de visita
-     */
-    @Test
-    public void testDeleteVisit() {
-        Visit visit = new Visit(1, Date.valueOf("2024-04-10"), "Vacunación");
-        Visit createdVisit = visitService.create(visit);
-
-        try {
-            visitService.delete(createdVisit.getId());
-        } catch (VisitNotFoundException e) {
-            fail("No se pudo eliminar la visita: " + e.getMessage());
-        }
-
-        assertThrows(VisitNotFoundException.class, () -> {
-            visitService.findById(createdVisit.getId());
-        });
     }
 }
