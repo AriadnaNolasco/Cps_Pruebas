@@ -13,10 +13,10 @@ import java.sql.Date;
 public class Visit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "pet_id", nullable = false)
-    private int petId;
+    private Integer petId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "visit_date", nullable = false)
@@ -25,16 +25,16 @@ public class Visit {
     @Column(nullable = false)
     private String description;
 
-    // Constructor con ID (útil para pruebas o actualizaciones)
-    public Visit(int id, int petId, Date visitDate, String description) {
+    // Constructor con ID (opcional para pruebas o actualizaciones)
+    public Visit(Integer id, Integer petId, Date visitDate, String description) {
         this.id = id;
         this.petId = petId;
         this.visitDate = visitDate;
         this.description = description;
     }
 
-    // Constructor sin ID (útil para creaciones)
-    public Visit(int petId, Date visitDate, String description) {
+    // Constructor sin ID
+    public Visit(Integer petId, Date visitDate, String description) {
         this.petId = petId;
         this.visitDate = visitDate;
         this.description = description;

@@ -9,15 +9,7 @@ import java.sql.Date;
 
 @Repository
 public interface VisitRepository extends JpaRepository<Visit, Integer> {
-    // Buscar visitas por ID de mascota
-    List<Visit> findByPetId(Long petId);
-
-    // Buscar visitas por fecha exacta
+    List<Visit> findByPetId(Integer petId);
     List<Visit> findByVisitDate(Date visitDate);
-
-    // Buscar visitas por descripción (si se desea)
     List<Visit> findByDescriptionContaining(String keyword);
-
-    @Override
-    List<Visit> findAll();
 }
