@@ -60,22 +60,24 @@ public class VisitServiceTest {
         assertEquals(Date.valueOf("2024-06-01"), updatedVisit.getVisitDate());
     }
 
-    /**
-     * Test de búsqueda por ID
-     */
+    /** Test de búsqueda por ID*/
+
+
     @Test
     public void testFindVisitById() {
+
         Visit visit = new Visit(1, Date.valueOf("2024-04-15"), "Chequeo dental");
         Visit createdVisit = visitService.create(visit);
 
-        try {
-            Visit foundVisit = visitService.findById(createdVisit.getId());
 
-            assertEquals(createdVisit.getId(), foundVisit.getId());
-            assertEquals("Chequeo dental", foundVisit.getDescription());
-        } catch (VisitNotFoundException e) {
-            fail("No se encontró la visita: " + e.getMessage());
-        }
+        Visit foundVisit = assertDoesNotThrow(() -> visitService.findById(createdVisit.getId()),
+                "No se encontró la visita con ID: " + createdVisit.getId());
+
+
+        assertEquals(createdVisit.getId(), foundVisit.getId(), "Los IDs no coinciden");
+        assertEquals(createdVisit.getPetId(), foundVisit.getPetId(), "Los petId no coinciden");
+        assertEquals(Date.valueOf("2024-04-15"), foundVisit.getVisitDate(), "Las fechas no coinciden");
+        assertEquals("Chequeo dental", foundVisit.getDescription(), "Las descripciones no coinciden");
     }
 
     /**
