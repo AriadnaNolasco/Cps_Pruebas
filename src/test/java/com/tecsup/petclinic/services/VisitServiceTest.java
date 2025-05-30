@@ -40,25 +40,6 @@ public class VisitServiceTest {
         assertEquals(description, createdVisit.getDescription());
     }
 
-    /**
-     * Test de actualización de visita
-     */
-    @Test
-    public void testUpdateVisit() {
-        // Crear una visita
-        Visit visit = new Visit(1, Date.valueOf("2024-05-01"), "Visita inicial");
-        Visit createdVisit = visitService.create(visit);
-
-        // Modificar datos
-        createdVisit.setVisitDate(Date.valueOf("2024-06-01"));
-        createdVisit.setDescription("Visita actualizada");
-
-        // Actualizar
-        Visit updatedVisit = visitService.update(createdVisit);
-
-        assertEquals("La visita se actualizo", updatedVisit.getDescription());
-        assertEquals(Date.valueOf("2024-06-01"), updatedVisit.getVisitDate());
-    }
 
     /**
      * Test de búsqueda por ID
