@@ -30,5 +30,21 @@ public class VisitController {
     public List<Visit> getAllVisits() {
         return visitService.findAll();
     }
+    @GetMapping("/{id}")
+    public Visit getVisitById(@PathVariable Integer id) throws VisitNotFoundException {
+        return visitService.findById(id);
+    }
+
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteVisit(@PathVariable Integer id) throws VisitNotFoundException {
+        visitService.delete(id);
+    }
+
+    @GetMapping("/pet/{petId}")
+    public List<Visit> getVisitsByPetId(@PathVariable Integer petId) {
+        return visitService.findByPetId(petId);
+    }
 }
 
