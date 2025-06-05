@@ -28,7 +28,7 @@ public class PetServiceTest {
 
         String NAME_EXPECTED = "Leo";
 
-        Integer ID = 1;
+        Integer ID = (Integer) 1;
 
         Pet pet = null;
 
