@@ -1,6 +1,7 @@
 package com.tecsup.petclinic.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import com.tecsup.petclinic.dtos.VisitDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -10,9 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,49 +55,50 @@ public class VisitControllerTest {
 
     @Test
     public void testUpdateVisit() throws Exception {
-        // Visita creada
-        String originalDescription = "Initial Check";
-        Integer petId = 1;
-        String originalDate = "2025-06-01";
 
+        // Valores iniciales
+        String DESCRIPTION = "Initial Check";
+        Integer PET_ID = 1;
+        String VISIT_DATE = "2025-06-01";
+
+        // Nuevos valores para actualización
+        String UP_DESCRIPTION = "Updated Check";
+        String UP_VISIT_DATE = "2025-06-10";
+
+        // Crear visita original
         VisitDTO visitDTO = new VisitDTO();
-        visitDTO.setDescription(originalDescription);
-        visitDTO.setPetId(petId);
-        visitDTO.setVisitDate(java.sql.Date.valueOf(originalDate));
+        visitDTO.setDescription(DESCRIPTION);
+        visitDTO.setPetId(PET_ID);
+        visitDTO.setVisitDate(java.sql.Date.valueOf(VISIT_DATE));
 
-        String response = this.mockMvc.perform(post("/visits")
+        // CREATE
+        ResultActions mvcActions = mockMvc.perform(post("/visits")
                         .content(om.writeValueAsString(visitDTO))
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .andDo(print())
+                .andExpect(status().isCreated());
 
-        // Paso 2: Obtener el ID del JSON de respuesta
-        VisitDTO createdVisit = om.readValue(response, VisitDTO.class);
-        Integer visitId = createdVisit.getId();
+        // Obtener ID de la respuesta
+        String response = mvcActions.andReturn().getResponse().getContentAsString();
+        Integer id = JsonPath.parse(response).read("$.id");
 
-        // Paso 3: Preparar datos actualizados
-        String updatedDescription = "Updated Check";
-        String updatedDate = "2025-06-10";
-
+        // Preparar datos actualizados
         VisitDTO updatedVisitDTO = new VisitDTO();
-        updatedVisitDTO.setId(visitId);
-        updatedVisitDTO.setPetId(petId); // mismo petId
-        updatedVisitDTO.setVisitDate(java.sql.Date.valueOf(updatedDate));
-        updatedVisitDTO.setDescription(updatedDescription);
+        updatedVisitDTO.setId(id);
+        updatedVisitDTO.setDescription(UP_DESCRIPTION);
+        updatedVisitDTO.setPetId(PET_ID); // se mantiene igual
+        updatedVisitDTO.setVisitDate(java.sql.Date.valueOf(UP_VISIT_DATE));
 
-        // Paso 4: Ejecutar PUT /visits/{id}
-        this.mockMvc.perform(
-                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put("/visits/" + visitId)
-                                .content(om.writeValueAsString(updatedVisitDTO))
-                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+        // UPDATE
+        mockMvc.perform(put("/visits/" + id)
+                        .content(om.writeValueAsString(updatedVisitDTO))
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(visitId)))
-                .andExpect(jsonPath("$.description", is(updatedDescription)))
-                .andExpect(jsonPath("$.visitDate", is(updatedDate)))
-                .andExpect(jsonPath("$.petId", is(petId)));
+                .andExpect(jsonPath("$.id", is(id)))
+                .andExpect(jsonPath("$.description", is(UP_DESCRIPTION)))
+                .andExpect(jsonPath("$.visitDate", is(UP_VISIT_DATE)))
+                .andExpect(jsonPath("$.petId", is(PET_ID)));
     }
 
 }
