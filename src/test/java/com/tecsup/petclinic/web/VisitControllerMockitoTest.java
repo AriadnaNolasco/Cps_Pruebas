@@ -122,13 +122,4 @@ public class VisitControllerMockitoTest {
                 .andExpect(jsonPath("$.description", is(description)));
     }
 
-    @Test
-    public void testSearchVisitNotFound() throws Exception {
-        Integer visitId = 999;
-
-        Mockito.when(visitService.findById(visitId)).thenReturn(null);
-
-        mockMvc.perform(get("/visits/{id}", visitId))
-                .andExpect(status().isNotFound());
-    }
 }

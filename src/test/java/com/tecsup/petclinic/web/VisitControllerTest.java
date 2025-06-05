@@ -52,7 +52,7 @@ public class VisitControllerTest {
 
     @Test
     public void testUpdateVisit() throws Exception {
-        // Paso 1: Crear una visita primero
+        // Visita creada
         String originalDescription = "Initial Check";
         Integer petId = 1;
         String originalDate = "2025-06-01";
