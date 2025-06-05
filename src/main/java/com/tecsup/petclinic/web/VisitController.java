@@ -25,7 +25,6 @@ public class VisitController {
         return visitService.create(visit);
     }
 
-
     @GetMapping
     public List<Visit> getAllVisits() {
         return visitService.findAll();
@@ -35,6 +34,16 @@ public class VisitController {
         return visitService.findById(id);
     }
 
+    @PutMapping("/{id}")
+    public Visit updateVisit(@RequestBody Visit visit, @PathVariable Integer id) throws VisitNotFoundException {
+        Visit existingVisit = visitService.findById(id);
+
+        existingVisit.setVisitDate(visit.getVisitDate());
+        existingVisit.setDescription(visit.getDescription());
+        existingVisit.setPetId(visit.getPetId());
+
+        return visitService.update(existingVisit);
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

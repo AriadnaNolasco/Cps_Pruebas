@@ -66,4 +66,38 @@ public class VisitControllerMockitoTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.description", is(description)));
     }
+
+    @Test
+    public void testUpdateVisit() throws Exception {
+
+        Integer visitId = 1;
+        String updatedDescription = "Updated Check";
+
+        VisitDTO updatedVisitDTO = new VisitDTO();
+        updatedVisitDTO.setId(visitId);
+        updatedVisitDTO.setDescription(updatedDescription);
+
+        Visit existingVisit = new Visit();
+        existingVisit.setId(visitId);
+        existingVisit.setDescription("Old Description");
+
+        Visit updatedVisit = new Visit();
+        updatedVisit.setId(visitId);
+        updatedVisit.setDescription(updatedDescription);
+
+        // Simula que el servicio encuentra el registro existente
+        Mockito.when(visitService.findById(visitId)).thenReturn(existingVisit);
+
+        // Simula que el servicio actualiza el registro
+        Mockito.when(visitService.update(Mockito.any(Visit.class))).thenReturn(updatedVisit);
+
+        mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                                .put("/visits/{id}", visitId)
+                                .content(om.writeValueAsString(updatedVisitDTO))
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.description", is(updatedDescription)));
+    }
+
 }
