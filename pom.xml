@@ -61,12 +61,20 @@
 			<version>${org.mapstruct.version}</version>
 		</dependency>
 
+		<!-- Integration test-->
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>spring-mock-mvc</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- h2 -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 
 	</dependencies>
  
