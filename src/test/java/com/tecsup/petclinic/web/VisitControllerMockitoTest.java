@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -100,4 +101,34 @@ public class VisitControllerMockitoTest {
                 .andExpect(jsonPath("$.description", is(updatedDescription)));
     }
 
+    @Test
+    public void testSearchVisit() throws Exception {
+        Integer visitId = 1;
+        String description = "Routine Check";
+
+        VisitDTO visitDTO = new VisitDTO();
+        visitDTO.setId(visitId);
+        visitDTO.setDescription(description);
+
+        Visit visit = new Visit();
+        visit.setId(visitId);
+        visit.setDescription(description);
+
+        Mockito.when(visitService.findById(visitId)).thenReturn(visit);
+
+        mockMvc.perform(get("/visits/{id}", visitId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(visitId)))
+                .andExpect(jsonPath("$.description", is(description)));
+    }
+
+    @Test
+    public void testSearchVisitNotFound() throws Exception {
+        Integer visitId = 999;
+
+        Mockito.when(visitService.findById(visitId)).thenReturn(null);
+
+        mockMvc.perform(get("/visits/{id}", visitId))
+                .andExpect(status().isNotFound());
+    }
 }
